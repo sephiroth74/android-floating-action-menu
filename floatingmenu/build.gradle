@@ -1,6 +1,10 @@
-apply plugin: 'android-library'
-apply plugin: 'signing'
+apply plugin: 'maven'
 apply plugin: 'maven-publish'
+apply plugin: 'signing'
+apply plugin: 'android-library'
+
+version = VERSION_NAME
+group = GROUP
 
 android {
     compileSdkVersion 19
@@ -10,7 +14,7 @@ android {
         minSdkVersion 9
         targetSdkVersion 19
         versionCode 1
-        versionName libraryVersion
+        versionName version
     }
     buildTypes {
         release {
@@ -29,7 +33,7 @@ def generatePom() {
         project {
             name 'android-floating-action-menu'
             packaging 'aar'
-            groupId libraryGroup
+            groupId project.group
             artifactId project.name
             version project.version
             description 'Floating Action Menu for Android. Inspired by the Google Plus floating menu'
@@ -67,13 +71,8 @@ def generatePom() {
     }
 }
 
-signing {
-    required { has("release") && gradle.taskGraph.hasTask("uploadArchives") }
-    sign configurations.archives
-}
-
 uploadArchives {
-    if (has("sonatypeUsername") && has("sonatypePassword")) {
+    if (project.hasProperty('sonatypeUsername')) {
         repositories {
             mavenDeployer {
                 beforeDeployment {
@@ -91,4 +90,8 @@ uploadArchives {
             }
         }
     }
+}
+
+signing {
+    sign configurations.archives
 }
