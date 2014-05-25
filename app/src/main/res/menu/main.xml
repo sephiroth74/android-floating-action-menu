@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="it.sephiroth.android.library.floatingmenu.app.MainActivity" >
+    <item android:id="@+id/example2"
+        android:title="@string/advanced_example"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+</menu>

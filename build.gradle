@@ -1,0 +1,34 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.10.+'
+    }
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+        maven {
+            name 'sonatype-snapshots'
+            url uri("https://oss.sonatype.org/content/repositories/snapshots")
+        }
+
+        maven {
+            name 'sonatype-deploy'
+            url uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+        }
+
+        maven {
+            name 'snoatype-releases'
+            url uri("https://oss.sonatype.org/content/repositories/releases")
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.12'
+}

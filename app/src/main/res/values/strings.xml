@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Floating Action</string>
+    <string name="title_activity_main_activity2">ViewPager Example</string>
+    <string name="title_activity_main_activity">Simple Example</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+	<string name="advanced_example">Advanced Example</string>
+	<string name="simple_example">Simple Example</string>
+
+</resources>
