@@ -11,6 +11,7 @@ public class FloatingActionItem {
 	int paddingBottom = 0;
 	int paddingLeft = 0;
 	int paddingRight = 0;
+	int backgroundResId;
 
 	static public class Builder {
 		int id;
@@ -20,6 +21,7 @@ public class FloatingActionItem {
 		int paddingBottom = 0;
 		int paddingLeft = 0;
 		int paddingRight = 0;
+		int backgroundResId = 0;
 
 		/**
 		 * @param id unique id to be used with the
@@ -27,6 +29,14 @@ public class FloatingActionItem {
 		 */
 		public Builder(int id) {
 			this.id = id;
+		}
+
+		/**
+		 * Assign a custom background resource
+		 */
+		public Builder withBackgroundResId(int resId) {
+			this.backgroundResId = resId;
+			return this;
 		}
 
 		/**
@@ -84,6 +94,7 @@ public class FloatingActionItem {
 			item.paddingLeft = paddingLeft;
 			item.paddingRight = paddingRight;
 			item.paddingTop = paddingTop;
+			item.backgroundResId = backgroundResId;
 			return item;
 		}
 	}

@@ -117,9 +117,14 @@ public class FloatingActionMenu implements AbsListView.OnScrollListener, View.On
 			FloatingActionItemImageView view = new FloatingActionItemImageView(activity);
 			view.setImageResource(actionItem.resId);
 			view.setPadding(actionItem.paddingLeft, actionItem.paddingTop, actionItem.paddingRight, actionItem.paddingBottom);
-			view.setBackgroundResource(R.drawable.action_item_background);
 			view.setLayoutParams(params);
 			view.setItem(actionItem);
+			view.setScaleType(FloatingActionItemImageView.ScaleType.CENTER_INSIDE);
+			if (actionItem.backgroundResId != 0) {
+				view.setBackgroundResource(actionItem.backgroundResId);
+			} else {
+				view.setBackgroundResource(R.drawable.action_item_background);
+			}
 			view.setOnClickListener(this);
 			root.addView(view);
 			result.add(view);
@@ -487,14 +492,14 @@ public class FloatingActionMenu implements AbsListView.OnScrollListener, View.On
 	/**
 	 * Default scroll delegate abstract class
 	 */
-	static abstract class ScrollDelegate {
-		abstract void setOnScrollListener(AbsListView.OnScrollListener listener);
+	public static interface ScrollDelegate {
+		void setOnScrollListener(AbsListView.OnScrollListener listener);
 	}
 
 	/**
 	 * Scroll delegate used for all the AbsListView(s)
 	 */
-	static public class AbsListViewScrollDelegate extends ScrollDelegate {
+	public static class AbsListViewScrollDelegate implements ScrollDelegate {
 		final AbsListView listView;
 
 		public AbsListViewScrollDelegate(AbsListView listView) {
@@ -502,7 +507,7 @@ public class FloatingActionMenu implements AbsListView.OnScrollListener, View.On
 		}
 
 		@Override
-		void setOnScrollListener(final AbsListView.OnScrollListener listener) {
+		public void setOnScrollListener(final AbsListView.OnScrollListener listener) {
 			listView.setOnScrollListener(listener);
 		}
 	}
