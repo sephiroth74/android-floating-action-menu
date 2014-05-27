@@ -352,8 +352,8 @@ public class FloatingActionMenu implements AbsListView.OnScrollListener, View.On
 		boolean visible;
 		int threshold = 36;
 		int gap = 12;
-		int verticalPadding = 12;
-		int horitontalPadding = 12;
+		int verticalPadding = 0;
+		int horitontalPadding = 0;
 		int gravity = Gravity.RIGHT;
 		Direction direction = Direction.Vertical;
 		ScrollDelegate scrollDelegate;

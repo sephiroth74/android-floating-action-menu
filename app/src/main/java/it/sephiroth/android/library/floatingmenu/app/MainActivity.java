@@ -78,7 +78,6 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
 			.withScrollDelegate(new FloatingActionMenu.AbsListViewScrollDelegate(mListView))
 			.withThreshold(R.dimen.float_action_threshold)
 			.withGap(R.dimen.float_action_item_gap)
-			.withHorizontalPadding(R.dimen.float_action_h_padding)
 			.withVerticalPadding(R.dimen.float_action_v_padding)
 			.withGravity(FloatingActionMenu.Gravity.CENTER_HORIZONTAL | FloatingActionMenu.Gravity.BOTTOM)
 			.withDirection(FloatingActionMenu.Direction.Vertical)
