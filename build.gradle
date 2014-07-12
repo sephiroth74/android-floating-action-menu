@@ -2,32 +2,24 @@
 
 buildscript {
     repositories {
-        mavenCentral()
-        mavenLocal()
+        jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.10.2'
+        classpath 'com.android.tools.build:gradle:0.12.1'
     }
 }
 
+def isReleaseBuild() {
+    return version.contains("SNAPSHOT") == false
+}
+
 allprojects {
+
+    version = VERSION_NAME
+    group = GROUP
+
     repositories {
-        mavenCentral()
-        mavenLocal()
-        maven {
-            name 'sonatype-snapshots'
-            url uri("https://oss.sonatype.org/content/repositories/snapshots")
-        }
-
-        maven {
-            name 'sonatype-deploy'
-            url uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-        }
-
-        maven {
-            name 'snoatype-releases'
-            url uri("https://oss.sonatype.org/content/repositories/releases")
-        }
+        jcenter()
     }
 }
 

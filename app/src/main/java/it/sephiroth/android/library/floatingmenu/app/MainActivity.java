@@ -55,19 +55,16 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
 		FloatingActionItem item1 = new FloatingActionItem.Builder(0)
 			.withResId(R.drawable.ic_facebook)
 			.withDelay(0)
-			.withPadding(action_item_padding)
 			.build();
 
 		FloatingActionItem item2 = new FloatingActionItem.Builder(1)
 			.withResId(R.drawable.ic_googleplus)
 			.withDelay(50)
-			.withPadding(action_item_padding)
 			.build();
 
 		FloatingActionItem item3 = new FloatingActionItem.Builder(2)
 			.withResId(R.drawable.ic_twitter)
 			.withDelay(100)
-			.withPadding(action_item_padding)
 			.build();
 
 		mFloatingMenu = new FloatingActionMenu
@@ -81,7 +78,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
 			.withVerticalPadding(R.dimen.float_action_v_padding)
 			.withGravity(FloatingActionMenu.Gravity.CENTER_HORIZONTAL | FloatingActionMenu.Gravity.BOTTOM)
 			.withDirection(FloatingActionMenu.Direction.Vertical)
-			.animationDuration(300)
+			.animationDuration(400)
 			.animationInterpolator(new OvershootInterpolator())
 			.visible(visible)
 		    .build();

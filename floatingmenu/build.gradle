@@ -1,20 +1,17 @@
-apply plugin: 'maven'
-apply plugin: 'maven-publish'
-apply plugin: 'signing'
 apply plugin: 'android-library'
 
-version = VERSION_NAME
-group = GROUP
+group GROUP
+version VERSION_NAME
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "19.0.3"
+    compileSdkVersion Integer.parseInt(ANDROID_BUILD_SDK_VERSION)
+    buildToolsVersion ANDROID_BUILD_TOOLS_VERSION
 
     defaultConfig {
         minSdkVersion 9
-        targetSdkVersion 19
+        targetSdkVersion Integer.parseInt(ANDROID_BUILD_TARGET_SDK_VERSION)
         versionCode 1
-        versionName version
+        versionName VERSION_NAME
     }
     buildTypes {
         release {
@@ -25,73 +22,9 @@ android {
 }
 
 dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.nineoldandroids:library:+'
 }
 
-def generatePom() {
-    def pom = pom {
-        project {
-            name 'android-floating-action-menu'
-            packaging 'aar'
-            groupId project.group
-            artifactId project.name
-            version project.version
-            description 'Floating Action Menu for Android. Inspired by the Google Plus floating menu'
-            inceptionYear '2014'
-            url 'http://blog.sephiroth.it'
 
-            licenses {
-                license {
-                    name 'The Apache Software License, Version 2.0'
-                    url 'http://www.apache.org/licenses/LICENSE-2.0'
-                    distribution 'repo'
-                }
-            }
-
-            scm {
-                url "https://github.com/sephiroth74/android-floating-action-menu"
-                connection "scm:git:git@github.com:sephiroth74/android-floating-action-menu.git"
-                developerConnection "scm:git:git@github.com:sephiroth74/android-floating-action-menu.git"
-            }
-
-
-            developers {
-                developer {
-                    id 'sephiroth74'
-                    name 'Alessandro Crugnola'
-                    email 'alessandro.crugnola@gmail.com'
-                    url 'http://blog.sephiroth.it'
-                    roles {
-                        role 'author'
-                        role 'developer'
-                    }
-                }
-            }
-        }
-    }
-}
-
-uploadArchives {
-    if (project.hasProperty('sonatypeUsername')) {
-        repositories {
-            mavenDeployer {
-                beforeDeployment {
-                    MavenDeployment deployment -> signing.signPom(deployment)
-                }
-                pom = generatePom()
-
-                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                    authentication(userName: sonatypeUsername, password: sonatypePassword)
-                }
-
-                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
-                    authentication(userName: sonatypeUsername, password: sonatypePassword)
-                }
-            }
-        }
-    }
-}
-
-signing {
-    sign configurations.archives
-}
+apply from: 'https://raw.githubusercontent.com/sephiroth74/gradle-mvn-push/master/gradle-mvn-push.gradle'

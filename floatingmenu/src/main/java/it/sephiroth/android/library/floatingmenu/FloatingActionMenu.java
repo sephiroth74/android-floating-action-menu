@@ -3,11 +3,13 @@ package it.sephiroth.android.library.floatingmenu;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.AbsListView;
+import android.widget.FrameLayout;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -110,25 +112,32 @@ public class FloatingActionMenu implements AbsListView.OnScrollListener, View.On
 		List<FloatingActionItemImageView> result = new ArrayList<FloatingActionItemImageView>();
 		ViewGroup root = (ViewGroup) activity.getWindow().getDecorView();
 
-		ViewGroup.LayoutParams params;
+		Log.e(TAG, "decorView: " + root);
+
+		FrameLayout.LayoutParams params;
+		ArrayList<View> focusables = new ArrayList<View>();
 
 		for (FloatingActionItem actionItem : items) {
-			params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+			params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+			params.gravity = android.view.Gravity.TOP | android.view.Gravity.LEFT;
 			FloatingActionItemImageView view = new FloatingActionItemImageView(activity);
 			view.setImageResource(actionItem.resId);
 			view.setPadding(actionItem.paddingLeft, actionItem.paddingTop, actionItem.paddingRight, actionItem.paddingBottom);
-			view.setLayoutParams(params);
 			view.setItem(actionItem);
 			view.setScaleType(FloatingActionItemImageView.ScaleType.CENTER_INSIDE);
+			view.setClickable(true);
+			view.setFocusableInTouchMode(true);
 			if (actionItem.backgroundResId != 0) {
 				view.setBackgroundResource(actionItem.backgroundResId);
 			} else {
 				view.setBackgroundResource(R.drawable.action_item_background);
 			}
 			view.setOnClickListener(this);
-			root.addView(view);
+			root.addView(view, params);
 			result.add(view);
+			focusables.add(view);
 		}
+		root.addFocusables(focusables, View.FOCUS_FORWARD );
 		return result;
 	}
 
@@ -316,6 +325,7 @@ public class FloatingActionMenu implements AbsListView.OnScrollListener, View.On
 
 	@Override
 	public void onClick(final View v) {
+		Log.i(TAG, "onClick: " + v);
 		FloatingActionItemImageView view = (FloatingActionItemImageView) v;
 
 		if (null != clickListener) {
