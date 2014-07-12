@@ -3,7 +3,6 @@ package it.sephiroth.android.library.floatingmenu;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
@@ -31,6 +30,8 @@ public class FloatingActionMenu implements AbsListView.OnScrollListener, View.On
 	private int itemGap;
 	private int threshold;
 	private boolean visible;
+
+	static final boolean LOG_ENABLED = false;
 
 	public FloatingActionMenu(final Builder builder) {
 		this.activity = builder.activity;
@@ -111,8 +112,6 @@ public class FloatingActionMenu implements AbsListView.OnScrollListener, View.On
 	private List<FloatingActionItemImageView> create(final List<FloatingActionItem> items) {
 		List<FloatingActionItemImageView> result = new ArrayList<FloatingActionItemImageView>();
 		ViewGroup root = (ViewGroup) activity.getWindow().getDecorView();
-
-		Log.e(TAG, "decorView: " + root);
 
 		FrameLayout.LayoutParams params;
 		ArrayList<View> focusables = new ArrayList<View>();
@@ -325,7 +324,6 @@ public class FloatingActionMenu implements AbsListView.OnScrollListener, View.On
 
 	@Override
 	public void onClick(final View v) {
-		Log.i(TAG, "onClick: " + v);
 		FloatingActionItemImageView view = (FloatingActionItemImageView) v;
 
 		if (null != clickListener) {

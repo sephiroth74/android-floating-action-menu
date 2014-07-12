@@ -11,10 +11,22 @@ import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
 
+import static it.sephiroth.android.library.floatingmenu.FloatingActionMenu.LOG_ENABLED;
+
 final class FloatingActionItemImageView extends ImageView {
+
 	final String TAG = "ActionItemImageView";
+
+	static enum Status {
+		None, Invisible, Visible, Animating
+	}
+
 	static final boolean IS_AT_LEAST_HONEY_COMB = Build.VERSION.SDK_INT >= 11;
 
+	private static final int ANIMATION_SHOW = 0;
+	private static final int ANIMATION_HIDE = 1;
+
+	private Status mStatus;
 	FloatingActionMenu.Direction direction;
 	Interpolator interpolator;
 	Animator.AnimatorListener mShowListener;
@@ -35,43 +47,57 @@ final class FloatingActionItemImageView extends ImageView {
 	public FloatingActionItemImageView(final Context context) {
 		super(context);
 
-		if (! IS_AT_LEAST_HONEY_COMB) {
-			mShowListener = new Animator.AnimatorListener() {
-				@Override
-				public void onAnimationStart(final Animator animation) {
-					FloatingActionItemImageView.this.onAnimationStart(0);
+		mShowListener = new Animator.AnimatorListener() {
+
+			boolean isCancelled;
+
+			@Override
+			public void onAnimationStart(final Animator animation) {
+				isCancelled = false;
+				FloatingActionItemImageView.this.onAnimationStart(ANIMATION_SHOW);
+			}
+
+			@Override
+			public void onAnimationEnd(final Animator animation) {
+				if (! isCancelled) {
+					FloatingActionItemImageView.this.onAnimationEnd(ANIMATION_SHOW);
 				}
+			}
 
-				@Override
-				public void onAnimationEnd(final Animator animation) {
-					FloatingActionItemImageView.this.onAnimationEnd(0);
+			@Override
+			public void onAnimationCancel(final Animator animation) {
+				isCancelled = true;
+			}
+
+			@Override
+			public void onAnimationRepeat(final Animator animation) {}
+		};
+
+		mHideListener = new Animator.AnimatorListener() {
+
+			boolean isCancelled;
+
+			@Override
+			public void onAnimationStart(final Animator animation) {
+				isCancelled = false;
+				FloatingActionItemImageView.this.onAnimationStart(ANIMATION_HIDE);
+			}
+
+			@Override
+			public void onAnimationEnd(final Animator animation) {
+				if (! isCancelled) {
+					FloatingActionItemImageView.this.onAnimationEnd(ANIMATION_HIDE);
 				}
+			}
 
-				@Override
-				public void onAnimationCancel(final Animator animation) {}
+			@Override
+			public void onAnimationCancel(final Animator animation) {
+				isCancelled = true;
+			}
 
-				@Override
-				public void onAnimationRepeat(final Animator animation) {}
-			};
-
-			mHideListener = new Animator.AnimatorListener() {
-				@Override
-				public void onAnimationStart(final Animator animation) {
-					FloatingActionItemImageView.this.onAnimationStart(1);
-				}
-
-				@Override
-				public void onAnimationEnd(final Animator animation) {
-					FloatingActionItemImageView.this.onAnimationEnd(1);
-				}
-
-				@Override
-				public void onAnimationCancel(final Animator animation) {}
-
-				@Override
-				public void onAnimationRepeat(final Animator animation) {}
-			};
-		}
+			@Override
+			public void onAnimationRepeat(final Animator animation) {}
+		};
 
 		mShowAnimator = new ObjectAnimator();
 		mShowAnimator.setTarget(this);
@@ -127,14 +153,31 @@ final class FloatingActionItemImageView extends ImageView {
 	}
 
 	public void show(boolean animate, int delay) {
+		if (LOG_ENABLED) {
+			Log.i(TAG, "show, current status: " + mStatus);
+		}
+
+		if (mStatus == Status.Visible) {
+			if (LOG_ENABLED) {
+				Log.w(TAG, "already visible");
+			}
+			return;
+		}
+
+		mStatus = Status.Animating;
+
 		if (mHideAnimator.isStarted()) {
 			mHideAnimator.cancel();
+		}
+
+		if (mShowAnimator.isStarted()) {
+			mShowAnimator.cancel();
 		}
 
 		if (direction == FloatingActionMenu.Direction.Vertical) {
 			if (! animate) {
 				ViewHelper.setTranslationY(this, y1);
-				onAnimationEnd(0);
+				onAnimationEnd(ANIMATION_SHOW);
 			}
 			else {
 				if (IS_AT_LEAST_HONEY_COMB) {
@@ -150,7 +193,7 @@ final class FloatingActionItemImageView extends ImageView {
 		else {
 			if (! animate) {
 				ViewHelper.setTranslationX(this, x1);
-				onAnimationEnd(0);
+				onAnimationEnd(ANIMATION_SHOW);
 			}
 			else {
 				if (IS_AT_LEAST_HONEY_COMB) {
@@ -166,14 +209,32 @@ final class FloatingActionItemImageView extends ImageView {
 	}
 
 	public void hide(boolean animate, int delay) {
+
+		if (LOG_ENABLED) {
+			Log.i(TAG, "hide, current status: " + mStatus);
+		}
+
+		if (mStatus == Status.Invisible) {
+			if (LOG_ENABLED) {
+				Log.w(TAG, "already hidden");
+			}
+			return;
+		}
+
+		mStatus = Status.Animating;
+
 		if (mShowAnimator.isStarted()) {
 			mShowAnimator.cancel();
+		}
+
+		if (mHideAnimator.isStarted()) {
+			mHideAnimator.cancel();
 		}
 
 		if (direction == FloatingActionMenu.Direction.Vertical) {
 			if (! animate) {
 				ViewHelper.setTranslationY(this, y2);
-				onAnimationEnd(1);
+				onAnimationEnd(ANIMATION_HIDE);
 			}
 			else {
 				if (IS_AT_LEAST_HONEY_COMB) {
@@ -189,7 +250,7 @@ final class FloatingActionItemImageView extends ImageView {
 		else {
 			if (! animate) {
 				ViewHelper.setTranslationX(this, x2);
-				onAnimationEnd(1);
+				onAnimationEnd(ANIMATION_HIDE);
 			}
 			else {
 				if (IS_AT_LEAST_HONEY_COMB) {
@@ -204,6 +265,26 @@ final class FloatingActionItemImageView extends ImageView {
 		}
 	}
 
+	private float getCurrentY() {
+		if (mShowAnimator.isRunning() || mHideAnimator.isRunning()) {
+			return ViewHelper.getTranslationY(this);
+		}
+		else {
+			FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) getLayoutParams();
+			return params.topMargin;
+		}
+	}
+
+	private float getCurrentX() {
+		if (mShowAnimator.isRunning() || mHideAnimator.isRunning()) {
+			return ViewHelper.getTranslationX(this);
+		}
+		else {
+			FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) getLayoutParams();
+			return params.leftMargin;
+		}
+	}
+
 	public FloatingActionItem getItem() {
 		return (FloatingActionItem) getTag();
 	}
@@ -214,35 +295,44 @@ final class FloatingActionItemImageView extends ImageView {
 
 	protected void onAnimationStart(int type) {
 		if (! IS_AT_LEAST_HONEY_COMB) {
-			Log.i(TAG, "onAnimationStart: " + type);
+
+			if (LOG_ENABLED) {
+				Log.v(TAG, "onAnimationStart: " + type);
+			}
 
 			FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) getLayoutParams();
 			params.setMargins(0, 0, 0, 0);
 			setLayoutParams(params);
 
-			if(direction == FloatingActionMenu.Direction.Vertical) {
+			if (direction == FloatingActionMenu.Direction.Vertical) {
 				ViewHelper.setTranslationX(this, x1);
-				ViewHelper.setTranslationY(this, type == 0 ? y2 : y1);
-			} else {
-				ViewHelper.setTranslationX(this, type == 0 ? x2 : x1);
+				ViewHelper.setTranslationY(this, type == ANIMATION_SHOW ? y2 : y1);
+			}
+			else {
+				ViewHelper.setTranslationX(this, type == ANIMATION_SHOW ? x2 : x1);
 				ViewHelper.setTranslationY(this, y1);
 			}
 		}
 	}
 
 	protected void onAnimationEnd(int type) {
-		if (! IS_AT_LEAST_HONEY_COMB) {
-			Log.i(TAG, "onAnimationEnd: " + type);
+		mStatus = type == ANIMATION_SHOW ? Status.Visible : Status.Invisible;
 
+		if (LOG_ENABLED) {
+			Log.v(TAG, "onAnimationEnd. status: " + mStatus + ", type: " + type);
+		}
+
+		if (! IS_AT_LEAST_HONEY_COMB) {
 			FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) getLayoutParams();
 
 			ViewHelper.setTranslationX(this, 0);
 			ViewHelper.setTranslationY(this, 0);
 
-			if(direction == FloatingActionMenu.Direction.Vertical ) {
-				params.setMargins(x1, type == 0 ? y1 : y2, 0, 0);
-			} else {
-				params.setMargins(type == 0 ? x1 : x2, y1, 0, 0);
+			if (direction == FloatingActionMenu.Direction.Vertical) {
+				params.setMargins(x1, type == ANIMATION_SHOW ? y1 : y2, 0, 0);
+			}
+			else {
+				params.setMargins(type == ANIMATION_SHOW ? x1 : x2, y1, 0, 0);
 			}
 
 			setLayoutParams(params);

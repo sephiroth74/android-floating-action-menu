@@ -89,7 +89,7 @@ public class ListFragment1 extends ListFragment implements FloatingActionMenu.On
 			//@formatter:off
 			FloatingActionItem item1 = new FloatingActionItem.Builder(0)
 				.withResId(R.drawable.ic_facebook)
-				.withDelay(0)
+				.withDelay(50)
 				.withPadding(action_item_padding)
 				.build();
 
@@ -137,7 +137,7 @@ public class ListFragment1 extends ListFragment implements FloatingActionMenu.On
 
 			if(sectionNumber==0){
 				builder.addItem(item1);
-				builder.addItem(item2);
+//				builder.addItem(item2);
 			} else {
 				builder.addItem(item3);
 				builder.addItem(item4);
