@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
@@ -70,10 +71,10 @@ public class ListFragment1 extends ListFragment implements FloatingActionMenu.On
 				public void run() {
 					int currentItem = ((MainActivity2) getActivity()).mViewPager.getCurrentItem();
 					if (currentItem == sectionNumber) {
-						mFloatingMenu.show(false);
+						mFloatingMenu.show(true, true);
 					}
 				}
-			}, 20);
+			}, 100);
 		}
 	}
 
@@ -118,20 +119,18 @@ public class ListFragment1 extends ListFragment implements FloatingActionMenu.On
 				.withGap(R.dimen.float_action_item_gap)
 				.withHorizontalPadding(R.dimen.float_action_h_padding)
 				.withVerticalPadding(R.dimen.float_action_v_padding)
-
 				.withGravity(
 					sectionNumber == 1 ?
 					FloatingActionMenu.Gravity.RIGHT | FloatingActionMenu.Gravity.BOTTOM :
 				    FloatingActionMenu.Gravity.RIGHT | FloatingActionMenu.Gravity.BOTTOM
 				)
-
 				.withDirection(
 					sectionNumber == 1 ?
 						FloatingActionMenu.Direction.Vertical :
 				        FloatingActionMenu.Direction.Horizontal
 				)
 				.animationDuration(200)
-				.animationInterpolator(new AccelerateDecelerateInterpolator())
+				.animationInterpolator(new DecelerateInterpolator())
 				//.withState(savedInstanceState)
 				.visible(false);
 

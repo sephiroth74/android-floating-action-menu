@@ -125,7 +125,8 @@ public class FloatingActionMenu implements AbsListView.OnScrollListener, View.On
 			view.setItem(actionItem);
 			view.setScaleType(FloatingActionItemImageView.ScaleType.CENTER_INSIDE);
 			view.setClickable(true);
-			view.setFocusableInTouchMode(true);
+//			view.setFocusable(true);
+//			view.setFocusableInTouchMode(true);
 			if (actionItem.backgroundResId != 0) {
 				view.setBackgroundResource(actionItem.backgroundResId);
 			} else {
@@ -137,6 +138,7 @@ public class FloatingActionMenu implements AbsListView.OnScrollListener, View.On
 			focusables.add(view);
 		}
 		root.addFocusables(focusables, View.FOCUS_FORWARD );
+//		root.addTouchables(focusables);
 		return result;
 	}
 
