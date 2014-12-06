@@ -52,23 +52,23 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
 		}
 
 		//@formatter:off
-		FloatingActionItem item1 = new FloatingActionItem.Builder(0)
+		FloatingActionItem item1 = new FloatingActionItem.Builder(this, 0)
 			.withResId(R.drawable.ic_facebook)
 			.withDelay(0)
 			.build();
 
-		FloatingActionItem item2 = new FloatingActionItem.Builder(1)
+		FloatingActionItem item2 = new FloatingActionItem.Builder(this, 1)
 			.withResId(R.drawable.ic_googleplus)
 			.withDelay(50)
 			.build();
 
-		FloatingActionItem item3 = new FloatingActionItem.Builder(2)
+		FloatingActionItem item3 = new FloatingActionItem.Builder(this, 2)
 			.withResId(R.drawable.ic_twitter)
 			.withDelay(100)
 			.build();
 
 		mFloatingMenu = new FloatingActionMenu
-			.Builder(this)
+			.Builder(this, R.style.FloatingActionMenuStyle)
 			.addItem(item1)
 		    .addItem(item2)
 			.addItem(item3)

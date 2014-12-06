@@ -2,7 +2,35 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+	    <item name="colorAccent">#FF4081</item>
+	    <item name="colorPrimary">#5C6BC0</item>
+	    <item name="colorPrimaryDark">#3F51B5</item>
         <!-- Customize your theme here. -->
     </style>
+
+	<style name="FloatingActionMenuStyle">
+		<item name="fam_threshold">@dimen/float_action_threshold</item>
+		<item name="fam_gap">@dimen/float_action_item_gap</item>
+		<item name="fam_horizontalPadding">@dimen/float_action_h_padding</item>
+		<item name="fam_verticalPadding">@dimen/float_action_v_padding</item>
+		<item name="android:animationDuration">200</item>
+		<item name="android:interpolator">@android:anim/decelerate_interpolator</item>
+		<item name="fam_gravity">10</item>
+		<item name="fam_direction">horizontal</item>
+	</style>
+
+	<style name="FloatingActionMenuItemStyle">
+		<item name="android:padding">@dimen/float_action_item_padding</item>
+		<item name="fam_item_background">@drawable/custom_item_background_selector</item>
+	</style>
+
+	<style name="FloatingActionMenuItemStyle.Square">
+		<item name="fam_item_background">@android:color/white</item>
+	</style>
+
+	<style name="FloatingActionMenuStyle.Horizontal">
+		<item name="fam_gravity">10</item>
+		<item name="fam_direction">vertical</item>
+	</style>
 
 </resources>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<declare-styleable name="FloatingActionMenu">
+		<attr name="fam_threshold" format="dimension"></attr>
+		<attr name="fam_gap" format="dimension"></attr>
+		<attr name="fam_horizontalPadding" format="dimension"></attr>
+		<attr name="fam_verticalPadding" format="dimension"></attr>
+		<attr name="android:animationDuration"></attr>
+		<attr name="android:interpolator"></attr>
+		<attr name="fam_gravity" format="integer"></attr>
+		<attr name="fam_direction"></attr>
+	</declare-styleable>
+
+	<declare-styleable name="FloatingActionItem">
+		<attr name="fam_item_background" format="reference" />
+		<attr name="fam_item_delay" format="integer" />
+		<attr name="fam_item_stateListAnimator" format="reference" />
+
+		<attr name="android:src" />
+		<attr name="android:padding" />
+	</declare-styleable>
+
+	<attr name="fam_direction" format="enum">
+		<enum name="horizontal" value="0" />
+		<enum name="vertical" value="1" />
+	</attr>
+
+
+</resources>
