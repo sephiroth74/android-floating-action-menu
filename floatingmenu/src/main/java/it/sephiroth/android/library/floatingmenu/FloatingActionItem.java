@@ -50,7 +50,10 @@ public class FloatingActionItem {
             this.delay = array.getInteger(R.styleable.FloatingActionItem_fam_item_delay, 0);
             this.stateListAnimResId =
                 array.getResourceId(R.styleable.FloatingActionItem_fam_item_stateListAnimator, R.anim.action_item_raise);
-            int padding = array.getDimensionPixelSize(R.styleable.FloatingActionItem_android_padding, 0);
+
+            int defaultPadding = context.getResources().getDimensionPixelSize(R.dimen.floating_action_item_default_padding);
+
+            int padding = array.getDimensionPixelSize(R.styleable.FloatingActionItem_android_padding, defaultPadding);
             array.recycle();
 
             withPadding(padding);

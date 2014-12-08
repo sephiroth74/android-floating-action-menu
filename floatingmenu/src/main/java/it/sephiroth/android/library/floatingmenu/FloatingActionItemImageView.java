@@ -2,7 +2,6 @@ package it.sephiroth.android.library.floatingmenu;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.animation.Interpolator;
@@ -22,7 +21,6 @@ final class FloatingActionItemImageView extends ImageView {
         None, Invisible, Visible, Animating
     }
 
-    static final boolean IS_AT_LEAST_HONEY_COMB = Build.VERSION.SDK_INT >= 11;
     private static final int ANIMATION_SHOW = 0;
     private static final int ANIMATION_HIDE = 1;
     private Status mStatus;
@@ -118,30 +116,34 @@ final class FloatingActionItemImageView extends ImageView {
         TypedArray array =
             getContext().getTheme().obtainStyledAttributes(style, R.styleable.FloatingActionItem);
 
-
-
         array.recycle();
     }
 
     void setDirection(final FloatingActionMenu.Direction direction) {
+        if (LOG_ENABLED) {
+            Log.v(TAG, "setDirection: " + direction);
+        }
         this.direction = direction;
         this.mShowAnimator.setPropertyName(direction == FloatingActionMenu.Direction.Vertical ? "translationY" : "translationX");
         this.mHideAnimator.setPropertyName(direction == FloatingActionMenu.Direction.Vertical ? "translationY" : "translationX");
     }
 
     void setAnimationDuration(int ms) {
+        if (LOG_ENABLED) Log.v(TAG, "setAnimationDuration: " + ms);
         this.duration = ms;
         this.mHideAnimator.setDuration(duration);
         this.mShowAnimator.setDuration(duration);
     }
 
     void setAnimationInterpolator(Interpolator interpolator) {
+        if (LOG_ENABLED) Log.v(TAG, "setAnimationInterpolator: " + interpolator);
         this.interpolator = interpolator;
         this.mShowAnimator.setInterpolator(interpolator);
         this.mHideAnimator.setInterpolator(interpolator);
     }
 
     void setX1(final int x1, final boolean immediate) {
+        if (LOG_ENABLED) Log.v(TAG, "setX1: " + x1 + ", immediate: " + immediate);
         this.x1 = x1;
         if (immediate) {
             ViewHelper.setTranslationX(this, x1);
@@ -149,10 +151,12 @@ final class FloatingActionItemImageView extends ImageView {
     }
 
     void setX2(final int x2) {
+        if (LOG_ENABLED) Log.v(TAG, "setX2: " + x2);
         this.x2 = x2;
     }
 
     void setY1(final int y1, boolean immediate) {
+        if (LOG_ENABLED) Log.v(TAG, "setY1: " + y1 + ", immediate: " + immediate);
         this.y1 = y1;
         if (immediate) {
             ViewHelper.setTranslationY(this, y1);
@@ -160,12 +164,15 @@ final class FloatingActionItemImageView extends ImageView {
     }
 
     void setY2(final int y2) {
+        if (LOG_ENABLED) Log.v(TAG, "setY2: " + y2);
         this.y2 = y2;
     }
 
     public void show(boolean animate, int delay) {
         if (LOG_ENABLED) {
             Log.i(TAG, "show, current status: " + mStatus);
+            Log.v(TAG, "direction: " + direction);
+            Log.v(TAG, "animate: " + animate);
         }
 
         if (mStatus == Status.Visible) {
@@ -190,7 +197,7 @@ final class FloatingActionItemImageView extends ImageView {
                 ViewHelper.setTranslationY(this, y1);
                 onAnimationEnd(ANIMATION_SHOW);
             } else {
-                if (IS_AT_LEAST_HONEY_COMB) {
+                if (ApiHelper.AT_LEAST_11) {
                     mShowAnimator.setFloatValues(y1);
                 } else {
                     mShowAnimator.setFloatValues(y2, y1);
@@ -203,7 +210,7 @@ final class FloatingActionItemImageView extends ImageView {
                 ViewHelper.setTranslationX(this, x1);
                 onAnimationEnd(ANIMATION_SHOW);
             } else {
-                if (IS_AT_LEAST_HONEY_COMB) {
+                if (ApiHelper.AT_LEAST_11) {
                     mShowAnimator.setFloatValues(x1);
                 } else {
                     mShowAnimator.setFloatValues(x2, x1);
@@ -215,9 +222,10 @@ final class FloatingActionItemImageView extends ImageView {
     }
 
     public void hide(boolean animate, int delay) {
-
         if (LOG_ENABLED) {
             Log.i(TAG, "hide, current status: " + mStatus);
+            Log.v(TAG, "direction: " + direction);
+            Log.v(TAG, "animate: " + animate);
         }
 
         if (mStatus == Status.Invisible) {
@@ -242,7 +250,7 @@ final class FloatingActionItemImageView extends ImageView {
                 ViewHelper.setTranslationY(this, y2);
                 onAnimationEnd(ANIMATION_HIDE);
             } else {
-                if (IS_AT_LEAST_HONEY_COMB) {
+                if (ApiHelper.AT_LEAST_11) {
                     mHideAnimator.setFloatValues(y2);
                 } else {
                     mHideAnimator.setFloatValues(y1, y2);
@@ -255,7 +263,7 @@ final class FloatingActionItemImageView extends ImageView {
                 ViewHelper.setTranslationX(this, x2);
                 onAnimationEnd(ANIMATION_HIDE);
             } else {
-                if (IS_AT_LEAST_HONEY_COMB) {
+                if (ApiHelper.AT_LEAST_11) {
                     mHideAnimator.setFloatValues(x2);
                 } else {
                     mHideAnimator.setFloatValues(x1, x2);
@@ -266,7 +274,9 @@ final class FloatingActionItemImageView extends ImageView {
         }
     }
 
+    @SuppressWarnings ("unused")
     private float getCurrentY() {
+        if (LOG_ENABLED) Log.i(TAG, "getCurrentY");
         if (mShowAnimator.isRunning() || mHideAnimator.isRunning()) {
             return ViewHelper.getTranslationY(this);
         } else {
@@ -275,7 +285,9 @@ final class FloatingActionItemImageView extends ImageView {
         }
     }
 
+    @SuppressWarnings ("unused")
     private float getCurrentX() {
+        if (LOG_ENABLED) Log.i(TAG, "getCurrentX");
         if (mShowAnimator.isRunning() || mHideAnimator.isRunning()) {
             return ViewHelper.getTranslationX(this);
         } else {
@@ -293,7 +305,7 @@ final class FloatingActionItemImageView extends ImageView {
     }
 
     protected void onAnimationStart(int type) {
-        if (!IS_AT_LEAST_HONEY_COMB) {
+        if (!ApiHelper.AT_LEAST_11) {
 
             if (LOG_ENABLED) {
                 Log.v(TAG, "onAnimationStart: " + type);
@@ -304,6 +316,10 @@ final class FloatingActionItemImageView extends ImageView {
             setLayoutParams(params);
 
             if (direction == FloatingActionMenu.Direction.Vertical) {
+                if (LOG_ENABLED) {
+                    Log.v(TAG, "setTranslationX: " + x1);
+                    Log.v(TAG, "setTranslationY: " + (type == ANIMATION_SHOW ? y2 : y1));
+                }
                 ViewHelper.setTranslationX(this, x1);
                 ViewHelper.setTranslationY(this, type == ANIMATION_SHOW ? y2 : y1);
             } else {
@@ -320,7 +336,7 @@ final class FloatingActionItemImageView extends ImageView {
             Log.v(TAG, "onAnimationEnd. status: " + mStatus + ", type: " + type);
         }
 
-        if (!IS_AT_LEAST_HONEY_COMB) {
+        if (!ApiHelper.AT_LEAST_11) {
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) getLayoutParams();
 
             ViewHelper.setTranslationX(this, 0);

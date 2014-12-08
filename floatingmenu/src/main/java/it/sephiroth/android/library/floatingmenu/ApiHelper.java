@@ -7,4 +7,5 @@ import android.os.Build;
  */
 class ApiHelper {
     static final boolean AT_LEAST_21 = Build.VERSION.SDK_INT >= 21;
+    static final boolean AT_LEAST_11 = Build.VERSION.SDK_INT >= 11;
 }

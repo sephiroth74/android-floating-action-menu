@@ -15,6 +15,7 @@ import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -35,6 +36,7 @@ public class FloatingActionMenu implements AbsListView.OnScrollListener, View.On
     private int itemGap;
     private int threshold;
     private boolean visible;
+    private ViewGroup root;
     static final boolean LOG_ENABLED = false;
 
     public FloatingActionMenu(final Builder builder) {
@@ -54,6 +56,7 @@ public class FloatingActionMenu implements AbsListView.OnScrollListener, View.On
             scrollDelegate.setOnScrollListener(this);
         }
 
+        this.root = createRoot(this.activity);
         this.itemViews = create(builder.items);
         layout();
     }
@@ -113,10 +116,22 @@ public class FloatingActionMenu implements AbsListView.OnScrollListener, View.On
         return visible;
     }
 
+    private ViewGroup createRoot(final Activity activity) {
+        ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
+
+        final ViewGroup viewGroup = new RelativeLayout(activity);
+        decorView
+            .addView(
+                viewGroup,
+                1,
+                new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        return viewGroup;
+    }
+
     @TargetApi (Build.VERSION_CODES.LOLLIPOP)
     private List<FloatingActionItemImageView> create(final List<FloatingActionItem> items) {
         List<FloatingActionItemImageView> result = new ArrayList<>();
-        ViewGroup root = (ViewGroup) activity.getWindow().getDecorView();
 
         FrameLayout.LayoutParams params;
         ArrayList<View> focusables = new ArrayList<>();
@@ -345,17 +360,22 @@ public class FloatingActionMenu implements AbsListView.OnScrollListener, View.On
      * Remove immediately all the items from their parent.
      */
     public void clear() {
-        Iterator<FloatingActionItemImageView> iterator = itemViews.iterator();
-        ViewGroup root = (ViewGroup) activity.getWindow().getDecorView();
-        while (iterator.hasNext()) {
-            FloatingActionItemImageView item = iterator.next();
-            root.removeView(item);
-            iterator.remove();
-        }
+//        Iterator<FloatingActionItemImageView> iterator = itemViews.iterator();
+//        while (iterator.hasNext()) {
+//            FloatingActionItemImageView item = iterator.next();
+//            root.removeView(item);
+//            iterator.remove();
+//        }
+
+        itemViews.clear();
+        ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
+        decorView.removeView(root);
+        root = null;
 
         if (null != scrollDelegate) {
             scrollDelegate.setOnScrollListener(null);
         }
+
     }
 
     public static interface OnItemClickListener {
@@ -376,7 +396,10 @@ public class FloatingActionMenu implements AbsListView.OnScrollListener, View.On
         ScrollDelegate scrollDelegate;
         int animationDuration = 300;
         Interpolator interpolator = new LinearInterpolator();
-        int itemStyle;
+
+        public Builder(Activity context) {
+            this(context, 0);
+        }
 
         public Builder(Activity context, int styleId) {
             this.activity = context;
@@ -563,5 +586,8 @@ public class FloatingActionMenu implements AbsListView.OnScrollListener, View.On
         public static final int CENTER_VERTICAL = 1 << 4;
         public static final int CENTER_HORIZONTAL = 1 << 5;
         public static final int CENTER = CENTER_HORIZONTAL | CENTER_VERTICAL;
+    }
+
+    private static class RootTag {
     }
 }

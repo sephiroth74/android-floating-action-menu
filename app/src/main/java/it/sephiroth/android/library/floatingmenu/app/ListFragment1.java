@@ -1,7 +1,5 @@
 package it.sephiroth.android.library.floatingmenu.app;
 
-import android.app.AlertDialog;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -9,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +42,7 @@ public class ListFragment1 extends ListFragment implements FloatingActionMenu.On
 
         View rootView = inflater.inflate(R.layout.fragment_main_activity2, container, false);
         List<String> data = createData();
-        setListAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, data));
+        setListAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, data));
         return rootView;
     }
 
@@ -71,56 +70,51 @@ public class ListFragment1 extends ListFragment implements FloatingActionMenu.On
                             mFloatingMenu.show(true, true);
                         }
                     }
-                }, 100);
+                }, 400);
         }
     }
 
     private void initFloatingMenu(final int sectionNumber, final Bundle savedInstanceState) {
         int currentItem = ((MainActivity2) getActivity()).mViewPager.getCurrentItem();
 
-        if (sectionNumber == 0 || sectionNumber == 1) {
+        if (sectionNumber < 2) {
 
-            Resources res = getResources();
-            int action_item_padding = res.getDimensionPixelSize(R.dimen.float_action_item_padding);
+            FloatingActionItem item1 = new FloatingActionItem.Builder(getActivity(), 0, R.style.FloatingActionMenuItemStyle)
+                .withResId(R.drawable.ic_facebook)
+                .withDelay(50)
+                .build();
 
-            //@formatter:off
-			FloatingActionItem item1 = new FloatingActionItem.Builder(getActivity(), 0, R.style.FloatingActionMenuItemStyle)
-				.withResId(R.drawable.ic_facebook)
-				.withDelay(50)
-				.build();
+            FloatingActionItem item2 = new FloatingActionItem.Builder(getActivity(), 1, R.style.FloatingActionMenuItemStyle)
+                .withResId(R.drawable.ic_twitter)
+                .withDelay(100)
+                .build();
 
-			FloatingActionItem item2 = new FloatingActionItem.Builder(getActivity(), 1, R.style.FloatingActionMenuItemStyle)
-				.withResId(R.drawable.ic_twitter)
-				.withDelay(100)
-				.build();
+            FloatingActionItem item3 = new FloatingActionItem.Builder(getActivity(), 2, R.style.FloatingActionMenuItemStyle)
+                .withResId(R.drawable.ic_facebook)
+                .withDelay(0)
+                .build();
 
-			FloatingActionItem item3 = new FloatingActionItem.Builder(getActivity(), 2, R.style.FloatingActionMenuItemStyle)
-				.withResId(R.drawable.ic_facebook)
-				.withDelay(0)
-				.build();
+            FloatingActionItem item4 = new FloatingActionItem.Builder(getActivity(), 3, R.style.FloatingActionMenuItemStyle)
+                .withResId(R.drawable.ic_instagram)
+                .withDelay(100)
+                .build();
 
-			FloatingActionItem item4 = new FloatingActionItem.Builder(getActivity(), 3, R.style.FloatingActionMenuItemStyle)
-				.withResId(R.drawable.ic_instagram)
-				.withDelay(100)
-				.build();
-
-			FloatingActionMenu.Builder builder = new FloatingActionMenu
-				.Builder(getActivity(), sectionNumber == 1 ? R.style.FloatingActionMenuStyle : R.style
+            FloatingActionMenu.Builder builder = new FloatingActionMenu
+                .Builder(
+                getActivity(), sectionNumber == 1 ? R.style.FloatingActionMenuStyle : R.style
                 .FloatingActionMenuStyle_Horizontal)
-				.withScrollDelegate(new FloatingActionMenu.AbsListViewScrollDelegate(getListView()))
-				.visible(false);
+                .withScrollDelegate(new FloatingActionMenu.AbsListViewScrollDelegate(getListView()))
+                .visible(false);
 
-			if(sectionNumber==0){
-				builder.addItem(item1);
-//				builder.addItem(item2);
-			} else {
-				builder.addItem(item3);
-				builder.addItem(item4);
-			}
+            if (sectionNumber == 0) {
+                builder.addItem(item1);
+            } else {
+                builder.addItem(item3);
+                builder.addItem(item4);
+            }
 
-			mFloatingMenu = builder.build();
+            mFloatingMenu = builder.build();
 
-			//@formatter:on
             mFloatingMenu.setOnItemClickListener(this);
         }
     }
@@ -166,11 +160,6 @@ public class ListFragment1 extends ListFragment implements FloatingActionMenu.On
     @Override
     public void onItemClick(final FloatingActionMenu menu, final int id) {
         Log.i(TAG, "onItemClick: " + id);
-
-//		new AlertDialog.Builder(getActivity())
-//			.setTitle("Item Click")
-//			.setMessage("Clicked item with id: " + id)
-//			.show();
-
+        Toast.makeText(getActivity(), "clicked item " + id, Toast.LENGTH_SHORT).show();
     }
 }
