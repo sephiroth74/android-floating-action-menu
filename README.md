@@ -13,7 +13,7 @@ Setup
 =====
 
 The simplest way to use this library is to add the library as a gradle aar dependency to your build. See the CHANGELOG.md for the latest version number.
-
+```gradle
 	repositories {
     	mavenCentral()
 	}
@@ -21,13 +21,13 @@ The simplest way to use this library is to add the library as a gradle aar depen
 	dependencies {
     	compile 'it.sephiroth.android.library.floatingmenu:floatingmenu:x.x.x' // see changelog
 	}
-
+```
 Usage
 =====
 
 In your activity create a reference to the `FloatingMenu`:
 
-
+```java
 		FloatingActionItem item1 = new FloatingActionItem.Builder(0)
 			.withResId(R.drawable.ic_facebook)
 			.withDelay(0)
@@ -64,7 +64,7 @@ In your activity create a reference to the `FloatingMenu`:
 		    .build();
 
 		mFloatingMenu.setOnItemClickListener(this);
-		
+```
 
 License
 =======
