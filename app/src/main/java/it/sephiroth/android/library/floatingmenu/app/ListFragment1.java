@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
@@ -14,6 +15,7 @@ import java.util.List;
 
 import it.sephiroth.android.library.floatingmenu.FloatingActionItem;
 import it.sephiroth.android.library.floatingmenu.FloatingActionMenu;
+import it.sephiroth.android.library.floatingmenu.FloatingActionMenu.Gravity;
 
 public class ListFragment1 extends ListFragment implements FloatingActionMenu.OnItemClickListener {
     private static final String TAG = "ListFragment";
@@ -77,46 +79,60 @@ public class ListFragment1 extends ListFragment implements FloatingActionMenu.On
     private void initFloatingMenu(final int sectionNumber, final Bundle savedInstanceState) {
         int currentItem = ((MainActivity2) getActivity()).mViewPager.getCurrentItem();
 
-        if (sectionNumber < 2) {
+        FloatingActionMenu.Builder builder = createMenu(sectionNumber);
 
-            FloatingActionItem item1 = new FloatingActionItem.Builder(getActivity(), 0, R.style.FloatingActionMenuItemStyle)
-                .withResId(R.drawable.ic_facebook)
-                .withDelay(50)
-                .build();
+        FloatingActionItem item1 = new FloatingActionItem.Builder(getActivity(), 0, R.style.FloatingActionMenuItemStyle)
+            .withResId(R.drawable.ic_facebook)
+            .build();
 
-            FloatingActionItem item2 = new FloatingActionItem.Builder(getActivity(), 1, R.style.FloatingActionMenuItemStyle)
-                .withResId(R.drawable.ic_twitter)
-                .withDelay(100)
-                .build();
+        FloatingActionItem item2 = new FloatingActionItem.Builder(getActivity(), 1, R.style.FloatingActionMenuItemStyle)
+            .withResId(R.drawable.ic_twitter)
+            .withDelay(sectionNumber == 3 ? 50 : 0)
+            .build();
 
-            FloatingActionItem item3 = new FloatingActionItem.Builder(getActivity(), 2, R.style.FloatingActionMenuItemStyle)
-                .withResId(R.drawable.ic_facebook)
-                .withDelay(0)
-                .build();
+        FloatingActionItem item3 = new FloatingActionItem.Builder(getActivity(), 2, R.style.FloatingActionMenuItemStyle)
+            .withResId(R.drawable.ic_facebook)
+            .withDelay(sectionNumber == 3 ? 100 : 0)
+            .build();
 
-            FloatingActionItem item4 = new FloatingActionItem.Builder(getActivity(), 3, R.style.FloatingActionMenuItemStyle)
-                .withResId(R.drawable.ic_instagram)
-                .withDelay(100)
-                .build();
+        FloatingActionItem item4 = new FloatingActionItem.Builder(getActivity(), 3, R.style.FloatingActionMenuItemStyle)
+            .withResId(R.drawable.ic_instagram)
+            .withDelay(sectionNumber == 3 ? 150 : 0)
+            .build();
 
-            FloatingActionMenu.Builder builder = new FloatingActionMenu
-                .Builder(
-                getActivity(), sectionNumber == 1 ? R.style.FloatingActionMenuStyle : R.style
-                .FloatingActionMenuStyle_Horizontal)
-                .withScrollDelegate(new FloatingActionMenu.AbsListViewScrollDelegate(getListView()))
-                .visible(false);
-
-            if (sectionNumber == 0) {
-                builder.addItem(item1);
-            } else {
-                builder.addItem(item3);
-                builder.addItem(item4);
-            }
-
-            mFloatingMenu = builder.build();
-
-            mFloatingMenu.setOnItemClickListener(this);
+        if (sectionNumber == 0) {
+            builder.addItem(item1);
+        } else if (sectionNumber == 1) {
+            builder.addItem(item1).addItem(item2);
+        } else if (sectionNumber == 2) {
+            builder.addItem(item1).addItem(item2).addItem(item3);
+        } else if (sectionNumber == 3) {
+            builder.addItem(item1).addItem(item2).addItem(item3).addItem(item4);
         }
+
+        mFloatingMenu = builder.build();
+        mFloatingMenu.setOnItemClickListener(this);
+    }
+
+    private FloatingActionMenu.Builder createMenu(int sectionNumber) {
+        FloatingActionMenu.Builder builder = new FloatingActionMenu
+            .Builder(
+            getActivity(), sectionNumber < 2 ? R.style.FloatingActionMenuStyle_Horizontal : R.style.FloatingActionMenuStyle)
+            .withScrollDelegate(new FloatingActionMenu.AbsListViewScrollDelegate(getListView()))
+            .animationInterpolator(new OvershootInterpolator())
+            .visible(false);
+
+        if (sectionNumber == 0) {
+            builder.withGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
+        } else if (sectionNumber == 1) {
+            builder.withGravity(Gravity.RIGHT | Gravity.BOTTOM);
+        } else if (sectionNumber == 2) {
+            builder.withGravity(Gravity.RIGHT | Gravity.BOTTOM);
+        } else {
+            builder.withGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
+        }
+
+        return builder;
     }
 
     private Boolean visible;

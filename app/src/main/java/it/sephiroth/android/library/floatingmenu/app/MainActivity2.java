@@ -146,7 +146,7 @@ public class MainActivity2 extends ActionBarActivity implements ActionBar.TabLis
 
 		@Override
 		public int getCount() {
-			return 3;
+			return 4;
 		}
 
 		@Override
@@ -159,6 +159,8 @@ public class MainActivity2 extends ActionBarActivity implements ActionBar.TabLis
 					return getString(R.string.title_section2).toUpperCase(l);
 				case 2:
 					return getString(R.string.title_section3).toUpperCase(l);
+				case 3:
+					return getString(R.string.title_section4).toUpperCase(l);
 			}
 			return null;
 		}

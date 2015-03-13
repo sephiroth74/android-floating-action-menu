@@ -13,7 +13,7 @@
 		<item name="fam_gap">@dimen/float_action_item_gap</item>
 		<item name="fam_horizontalPadding">@dimen/float_action_h_padding</item>
 		<item name="fam_verticalPadding">@dimen/float_action_v_padding</item>
-		<item name="android:animationDuration">200</item>
+		<item name="android:animationDuration">300</item>
 		<item name="android:interpolator">@android:anim/decelerate_interpolator</item>
 		<item name="fam_gravity">10</item>
 		<item name="fam_direction">horizontal</item>
