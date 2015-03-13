@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<dimen name="floating_action_item_elevation_normal">2dip</dimen>
+	<dimen name="floating_action_item_elevation_pressed">8dip</dimen>
+	<dimen name="floating_action_item_default_padding">18dip</dimen>
+</resources>

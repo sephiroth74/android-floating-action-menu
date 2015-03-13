@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<it.sephiroth.android.library.floatingmenu.FloatingActionItemImageView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:scaleType="centerInside"
+	android:clickable="true"
+	>
+	<!--android:stateListAnimator="@anim/action_item_raise"-->
+
+</it.sephiroth.android.library.floatingmenu.FloatingActionItemImageView>
